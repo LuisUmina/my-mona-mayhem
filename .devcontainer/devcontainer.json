@@ -1,0 +1,17 @@
+{
+  "name": "Mona Mayhem",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "postCreateCommand": "npm ci",
+  "customizations": {
+    "vscode": {
+      "extensions": ["astro-build.astro-vscode", "GitHub.copilot", "GitHub.copilot-chat"]
+    }
+  },
+  "forwardPorts": [4321],
+  "portsAttributes": {
+    "4321": {
+      "label": "Astro Dev Server",
+      "onAutoForward": "notify"
+    }
+  }
+}

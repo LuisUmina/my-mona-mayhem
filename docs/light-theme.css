@@ -1,0 +1,292 @@
+/* ── Light theme variable overrides ── */
+html[data-theme="light"] {
+    --bg-dark: #f5f5f7;
+    --bg-card: #ffffff;
+    --bg-code: #f0f0f5;
+    --bg-overlay-strong: rgba(245, 245, 247, 0.92);
+    --neon-cyan: #0077b6;
+    --neon-magenta: #c2185b;
+    --neon-purple: #7b1fa2;
+    --text-primary: #1a1a2e;
+    --text-secondary: #555570;
+    --border-color: #d0d0dd;
+    --success-green: #2e7d32;
+    --warning-yellow: #b8860b;
+}
+
+/* ── Body grid overlay ── */
+html[data-theme="light"] body::before {
+    background: linear-gradient(90deg, rgba(0,119,182,0.04) 1px, transparent 1px),
+                linear-gradient(rgba(0,119,182,0.04) 1px, transparent 1px);
+}
+
+/* ── Top controls & track toggle ── */
+html[data-theme="light"] .track-toggle {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--border-color);
+}
+
+html[data-theme="light"] .track-btn {
+    color: var(--text-secondary);
+}
+
+html[data-theme="light"] .track-btn:hover {
+    color: var(--text-primary);
+}
+
+html[data-theme="light"] .track-btn.active {
+    color: #fff;
+}
+
+/* ── Theme toggle button ── */
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.theme-toggle:hover {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+}
+
+/* ── Hero section (landing page) ── */
+html[data-theme="light"] .hero-badge {
+    background: rgba(0,119,182,0.08);
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+}
+
+html[data-theme="light"] .track-panel {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: var(--border-color);
+}
+
+html[data-theme="light"] .track-pill {
+    background: rgba(0,119,182,0.08);
+    color: var(--neon-cyan);
+}
+
+html[data-theme="light"] .hero-note {
+    color: var(--text-secondary);
+}
+
+/* ── Buttons (landing page) ── */
+html[data-theme="light"] .btn-primary {
+    color: #fff;
+}
+
+html[data-theme="light"] .btn-secondary {
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+html[data-theme="light"] .btn-secondary:hover {
+    background: rgba(0,119,182,0.06);
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+}
+
+/* ── Feature cards (landing page) ── */
+html[data-theme="light"] .feature-card {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+html[data-theme="light"] .feature-card:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 4px 16px rgba(0,119,182,0.1);
+}
+
+/* ── Part cards (landing page) ── */
+html[data-theme="light"] .part-card {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+html[data-theme="light"] .part-card:hover {
+    border-color: var(--neon-magenta);
+    background: rgba(193,21,91,0.03);
+}
+
+html[data-theme="light"] .part-number {
+    color: #fff;
+}
+
+html[data-theme="light"] .part-time {
+    background: rgba(0,119,182,0.08);
+    color: var(--neon-cyan);
+}
+
+/* ── Stats (landing page) ── */
+html[data-theme="light"] .stat-value {
+    color: var(--neon-cyan);
+}
+
+/* ── Prerequisites section (landing page) ── */
+html[data-theme="light"] .prereqs {
+    background: var(--bg-card);
+}
+
+html[data-theme="light"] .prereq-item {
+    background: var(--bg-dark);
+}
+
+/* ── Footer ── */
+html[data-theme="light"] footer {
+    border-top-color: var(--border-color);
+}
+
+/* ── Step page: header ── */
+html[data-theme="light"] .header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom-color: var(--border-color);
+}
+
+/* ── Step page: track indicator ── */
+html[data-theme="light"] .track-indicator {
+    background: rgba(0,119,182,0.08);
+    border-color: rgba(0,119,182,0.15);
+    color: var(--neon-cyan);
+}
+
+/* ── Step page: nav buttons ── */
+html[data-theme="light"] .nav-btn {
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+html[data-theme="light"] .nav-btn:hover:not(:disabled) {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+}
+
+/* ── Step page: sidebar ── */
+html[data-theme="light"] .sidebar {
+    background: var(--bg-card);
+    border-right-color: var(--border-color);
+}
+
+html[data-theme="light"] .step-link:hover {
+    background: rgba(0,119,182,0.06);
+    color: var(--text-primary);
+}
+
+html[data-theme="light"] .step-link.active {
+    background: rgba(0,119,182,0.1);
+    color: var(--text-primary);
+    border-left-color: var(--neon-cyan);
+}
+
+html[data-theme="light"] .step-number {
+    background: var(--border-color);
+    color: var(--text-primary);
+}
+
+html[data-theme="light"] .step-link.active .step-number {
+    color: #fff;
+}
+
+/* ── Step page: code blocks ── */
+html[data-theme="light"] .markdown code {
+    color: var(--text-primary);
+}
+
+html[data-theme="light"] .markdown :not(pre) > code {
+    background: var(--bg-code);
+    color: var(--warning-yellow);
+}
+
+html[data-theme="light"] .markdown pre {
+    background: var(--bg-code);
+    border-color: var(--border-color);
+}
+
+html[data-theme="light"] .markdown pre code {
+    color: var(--text-primary);
+}
+
+/* ── Step page: copy button ── */
+html[data-theme="light"] .copy-code-btn {
+    background: var(--bg-overlay-strong);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+html[data-theme="light"] .copy-code-btn:hover,
+html[data-theme="light"] .copy-code-btn:focus-visible {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 0 3px rgba(0,119,182,0.1);
+}
+
+html[data-theme="light"] .copy-code-btn.is-copied {
+    border-color: var(--success-green);
+    color: var(--success-green);
+}
+
+html[data-theme="light"] .copy-code-btn.is-error {
+    border-color: #d32f2f;
+    color: #d32f2f;
+}
+
+/* ── Step page: blockquotes ── */
+html[data-theme="light"] .markdown blockquote {
+    background: rgba(0,119,182,0.04);
+    border-left-color: var(--neon-cyan);
+}
+
+/* ── Step page: tables ── */
+html[data-theme="light"] .markdown th {
+    background: var(--bg-code);
+    color: var(--text-primary);
+}
+
+html[data-theme="light"] .markdown tr:hover td {
+    background: rgba(0,119,182,0.04);
+}
+
+/* ── Step page: checkboxes ── */
+html[data-theme="light"] .markdown input[type="checkbox"] {
+    border-color: var(--border-color);
+}
+
+html[data-theme="light"] .markdown input[type="checkbox"]:checked {
+    background: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+}
+
+html[data-theme="light"] .markdown input[type="checkbox"]:checked::after {
+    color: #fff;
+}
+
+/* ── Step page: footer nav ── */
+html[data-theme="light"] .nav-footer-btn {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+html[data-theme="light"] .nav-footer-btn:hover {
+    border-color: var(--neon-cyan);
+}
+
+/* ── Step page: markdown headings ── */
+html[data-theme="light"] .markdown h2 {
+    color: var(--neon-cyan);
+    border-bottom-color: var(--border-color);
+}
+
+html[data-theme="light"] .markdown h3 {
+    color: var(--neon-magenta);
+}

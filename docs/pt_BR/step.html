@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LSC44NDPLQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-LSC44NDPLQ');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mona Mayhem Workshop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <link rel="alternate" hreflang="en" href="https://copilot-dev-days.github.io/mona-mayhem/">
+    <link rel="alternate" hreflang="pt-BR" href="https://copilot-dev-days.github.io/mona-mayhem/pt_BR/">
+    <link rel="alternate" hreflang="es" href="https://copilot-dev-days.github.io/mona-mayhem/es/">
+    <link rel="alternate" hreflang="x-default" href="https://copilot-dev-days.github.io/mona-mayhem/">
+    <link rel="stylesheet" href="../step.css">
+    <link rel="stylesheet" href="../light-theme.css">
+    <script src="../theme-toggle.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-brand">
+                <span class="header-icon">🎮</span>
+                <span class="header-title">Mona Mayhem Workshop</span>
+            </a>
+            <div class="header-nav">
+                <div class="track-toggle" role="tablist" aria-label="Workshop track toggle">
+                    <button class="track-btn active" data-track="vscode" type="button">VS Code</button>
+                    <button class="track-btn" data-track="cli" type="button">CLI</button>
+                </div>
+                <span class="track-indicator" id="trackIndicator">Trilha VS Code</span>
+                <div class="locale-picker" id="localePicker">
+                    <button type="button" class="locale-toggle" aria-haspopup="listbox" aria-expanded="false" aria-label="Selecionar idioma">🌐</button>
+                    <ul role="listbox" aria-label="Idioma">
+                        <li role="option" data-locale="en" aria-selected="false">🇬🇧 English</li>
+                        <li role="option" data-locale="es" aria-selected="false">🇪🇸 Español</li>
+                        <li role="option" data-locale="pt-BR" aria-selected="true" class="active">🇧🇷 Português (Brasil)</li>
+                    </ul>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">☀️ Claro</button>
+                <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Anterior</button>
+                <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Próximo →</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Etapas do Workshop</div>
+                <nav id="stepNav"></nav>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="content">
+                <div id="markdownContent">
+                    <div class="loading">Carregando conteúdo</div>
+                </div>
+                <div class="nav-footer" id="navFooter"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const TRACK_STORAGE_KEY = 'monaMayhemWorkshopTrack';
+        const TRACKS = {
+            vscode: {
+                label: 'VS Code',
+                indicator: 'Trilha VS Code'
+            },
+            cli: {
+                label: 'CLI',
+                indicator: 'Trilha CLI'
+            }
+        };
+
+        const steps = [
+            { id: '00-overview', file: '00-overview.md', title: 'Visão Geral', number: '00' },
+            { id: '01-setup', file: '01-setup.md', title: 'Configuração & Engenharia de Contexto', number: '01' },
+            { id: '02-plan-and-scaffold', file: '02-plan-and-scaffold.md', title: 'Planejar & Estruturar', number: '02' },
+            { id: '03-agent-mode', file: '03-agent-mode.md', title: 'Construir o Jogo', number: '03' },
+            { id: '04-design-vibes', file: '04-design-vibes.md', title: 'Temas Design-First', number: '04' },
+            { id: '05-polish', file: '05-polish.md', title: 'Polimento & Trabalho Paralelo', number: '05' },
+            { id: '06-bonus', file: '06-bonus.md', title: 'Bônus & Extensões', number: '🎉' },
+        ];
+
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+        const GITHUB_RAW_BASE = isLocal ? '../../workshop/pt_BR/' : 'https://raw.githubusercontent.com/copilot-dev-days/mona-mayhem/main/workshop/pt_BR/';
+        const STEP_ID_PATTERN = /^[a-z0-9-]{1,64}$/;
+        const WHITESPACE_NORMALIZE_PATTERN = /[\s\n]+/g;
+        const COPY_BUTTON_RESET_DELAY_MS = 2000;
+        const copyButtonResetTimers = new WeakMap();
+
+        let currentIndex = 0;
+        let currentTrack = 'vscode';
+
+        function normalizeTrack(track) {
+            return track === 'cli' ? 'cli' : 'vscode';
+        }
+
+        function getStepFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('step') || '00-overview';
+        }
+
+        function getTrackFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const fromUrl = params.get('track');
+            if (fromUrl === 'vscode' || fromUrl === 'cli') {
+                return fromUrl;
+            }
+
+            try {
+                return normalizeTrack(localStorage.getItem(TRACK_STORAGE_KEY));
+            } catch (error) {
+                console.warn('Unable to read saved workshop track preference.', error);
+                return 'vscode';
+            }
+        }
+
+        function persistTrack(track) {
+            try {
+                localStorage.setItem(TRACK_STORAGE_KEY, track);
+            } catch (error) {
+                console.warn('Unable to persist workshop track preference.', error);
+            }
+        }
+
+        function buildStepUrl(stepId, track = currentTrack) {
+            return `?step=${stepId}&track=${track}`;
+        }
+
+        function updateTrackButtons() {
+            document.querySelectorAll('.track-btn').forEach((button) => {
+                const isActive = button.dataset.track === currentTrack;
+                button.classList.toggle('active', isActive);
+                button.setAttribute('aria-pressed', String(isActive));
+            });
+            document.getElementById('trackIndicator').textContent = TRACKS[currentTrack].indicator;
+            document.body.dataset.track = currentTrack;
+        }
+
+        function buildSidebar() {
+            const nav = document.getElementById('stepNav');
+            nav.innerHTML = steps.map((step, i) => `
+                <a href="${buildStepUrl(step.id)}" class="step-link ${i === currentIndex ? 'active' : ''}" data-index="${i}">
+                    <span class="step-number">${step.number}</span>
+                    <span>${step.title}</span>
+                </a>
+            `).join('');
+        }
+
+        function updateNavButtons() {
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').disabled = currentIndex === steps.length - 1;
+        }
+
+        function buildFooterNav() {
+            const footer = document.getElementById('navFooter');
+            const prev = currentIndex > 0 ? steps[currentIndex - 1] : null;
+            const next = currentIndex < steps.length - 1 ? steps[currentIndex + 1] : null;
+            footer.innerHTML = `
+                <a href="${prev ? buildStepUrl(prev.id) : '#'}" class="nav-footer-btn ${!prev ? 'disabled' : ''}">← ${prev ? prev.title : 'Anterior'}</a>
+                <a href="${next ? buildStepUrl(next.id) : '#'}" class="nav-footer-btn ${!next ? 'disabled' : ''}">${next ? next.title : 'Próximo'} →</a>
+            `;
+        }
+
+        function navigate(direction) {
+            const newIndex = currentIndex + direction;
+            if (newIndex >= 0 && newIndex < steps.length) {
+                window.location.href = buildStepUrl(steps[newIndex].id);
+            }
+        }
+
+        function filterTrackContent(md) {
+            const filtered = md.replace(/<!--\s*track:(vscode|cli):start\s*-->([\s\S]*?)<!--\s*track:\1:end\s*-->/g, (match, blockTrack, content) => {
+                return blockTrack === currentTrack ? content : '';
+            });
+
+            if (/<!--\s*track:(?:vscode|cli):(?:start|end)\s*-->/.test(filtered)) {
+                console.warn('Unmatched workshop track markers found in markdown content.');
+                return filtered.replace(/<!--\s*track:(?:vscode|cli):(?:start|end)\s*-->/g, '');
+            }
+
+            return filtered;
+        }
+
+        function processMarkdown(md) {
+            md = filterTrackContent(md);
+
+            md = md.replace(/> \[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*\n((?:> .*(?:\n|$))*)/gi, function(match, type, content) {
+                const cleanContent = content.replace(/^> ?/gm, '').trim();
+                const icons = { NOTE: 'ℹ️', TIP: '💡', IMPORTANT: '❗', WARNING: '⚠️', CAUTION: '🔴' };
+                const colors = { NOTE: 'var(--neon-cyan)', TIP: 'var(--success-green)', IMPORTANT: 'var(--neon-purple)', WARNING: 'var(--warning-yellow)', CAUTION: '#ff6b6b' };
+                const icon = icons[type.toUpperCase()] || 'ℹ️';
+                const color = colors[type.toUpperCase()] || 'var(--neon-cyan)';
+                return `<blockquote style="border-left-color: ${color};"><p style="color: ${color};">${icon} ${type.toUpperCase()}</p><p>${cleanContent}</p></blockquote>\n`;
+            });
+
+            md = md.replace(/\[([^\]]+)\]\((?:\.\/)?(?:workshop\/(?:pt_BR\/)?)?(\d+)-([^)]+)\.md\)/g, function(match, text, num, slug) {
+                const stepId = `${num}-${slug}`;
+                const found = steps.find(s => s.id === stepId || s.file === `${num}-${slug}.md`);
+                if (found) {
+                    return `[${text}](${buildStepUrl(found.id)})`;
+                }
+                return match;
+            });
+
+            return md;
+        }
+
+        function enableTaskListCheckboxes(stepId) {
+            const markdown = document.querySelector('#markdownContent .markdown');
+            if (!markdown) return;
+
+            const checkboxes = Array.from(markdown.querySelectorAll('input[type="checkbox"]'));
+            if (!checkboxes.length) return;
+
+            const normalizedStepId = STEP_ID_PATTERN.test(stepId) ? stepId : 'unknown-step';
+            const sanitizedStepId = encodeURIComponent(normalizedStepId);
+            const storageKey = `mona-mayhem-workshop-checks:${sanitizedStepId}`;
+            let savedStates = [];
+
+            try {
+                const stored = localStorage.getItem(storageKey);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (Array.isArray(parsed)) {
+                        savedStates = parsed;
+                    }
+                }
+            } catch (error) {
+                console.warn('Unable to load saved checklist state.', error);
+                savedStates = [];
+            }
+
+            checkboxes.forEach((checkbox, index) => {
+                checkbox.removeAttribute('disabled');
+                const listItem = checkbox.closest('li');
+                let itemText = '';
+                if (listItem) {
+                    const listItemClone = listItem.cloneNode(true);
+                    const clonedCheckbox = listItemClone.querySelector('input[type="checkbox"]');
+                    if (clonedCheckbox) {
+                        clonedCheckbox.remove();
+                    }
+                    itemText = (listItemClone.textContent || '').replace(WHITESPACE_NORMALIZE_PATTERN, ' ').trim();
+                }
+                const ariaLabel = itemText ? `Item da checklist: ${itemText}` : `Tarefa do workshop ${index + 1}`;
+                checkbox.setAttribute('aria-label', ariaLabel);
+
+                if (typeof savedStates[index] === 'boolean') {
+                    checkbox.checked = savedStates[index];
+                }
+
+                checkbox.addEventListener('change', () => {
+                    const states = checkboxes.map((item) => item.checked);
+                    localStorage.setItem(storageKey, JSON.stringify(states));
+                });
+            });
+        }
+
+        async function copyCodeText(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return;
+                } catch (error) {
+                    console.warn('Clipboard API failed, attempting fallback method.', error);
+                }
+            }
+
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            textarea.style.pointerEvents = 'none';
+            document.body.appendChild(textarea);
+            textarea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (!successful) {
+                    throw new Error('document.execCommand("copy") failed or was blocked by the browser.');
+                }
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        function updateCopyButtonState(button, label, stateClass, ariaLabel) {
+            button.textContent = label;
+            button.setAttribute('aria-label', ariaLabel);
+            button.classList.remove('is-copied', 'is-error');
+            if (stateClass) {
+                button.classList.add(stateClass);
+            }
+
+            const existingTimer = copyButtonResetTimers.get(button);
+            if (existingTimer) {
+                window.clearTimeout(existingTimer);
+                copyButtonResetTimers.delete(button);
+            }
+
+            if (!stateClass) {
+                return;
+            }
+
+            const resetTimer = window.setTimeout(() => {
+                button.textContent = 'Copiar';
+                button.setAttribute('aria-label', button.dataset.defaultAriaLabel);
+                button.classList.remove('is-copied', 'is-error');
+                copyButtonResetTimers.delete(button);
+            }, COPY_BUTTON_RESET_DELAY_MS);
+
+            copyButtonResetTimers.set(button, resetTimer);
+        }
+
+        function enableCodeBlockCopyButtons() {
+            const markdown = document.querySelector('#markdownContent .markdown');
+            if (!markdown) return;
+
+            const codeBlocks = Array.from(markdown.querySelectorAll('pre > code'));
+            codeBlocks.forEach((codeBlock) => {
+                const pre = codeBlock.parentElement;
+                if (!pre || pre.parentElement?.classList.contains('code-block-shell')) {
+                    return;
+                }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-shell';
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(pre);
+
+                const copyButton = document.createElement('button');
+                copyButton.type = 'button';
+                copyButton.className = 'copy-code-btn';
+                copyButton.textContent = 'Copiar';
+                copyButton.dataset.defaultAriaLabel = 'Copiar bloco de código';
+                copyButton.setAttribute('aria-label', copyButton.dataset.defaultAriaLabel);
+                copyButton.setAttribute('aria-live', 'polite');
+
+                copyButton.addEventListener('click', async () => {
+                    try {
+                        const codeText = codeBlock.textContent || '';
+                        if (!codeText.trim()) {
+                            return;
+                        }
+
+                        await copyCodeText(codeText);
+                        updateCopyButtonState(copyButton, 'Copiado!', 'is-copied', 'Bloco de código copiado');
+                    } catch (error) {
+                        console.error('Failed to copy code to clipboard:', error);
+                        updateCopyButtonState(copyButton, 'Falhou', 'is-error', 'Falha ao copiar bloco de código');
+                    }
+                });
+
+                wrapper.appendChild(copyButton);
+            });
+        }
+
+        async function loadStep(stepId) {
+            currentTrack = getTrackFromURL();
+            persistTrack(currentTrack);
+            updateTrackButtons();
+
+            const step = steps.find(s => s.id === stepId);
+            if (!step) {
+                document.getElementById('markdownContent').innerHTML = '<p>Passo não encontrado.</p>';
+                return;
+            }
+
+            currentIndex = steps.indexOf(step);
+            buildSidebar();
+            updateNavButtons();
+            buildFooterNav();
+            document.title = `${step.title} - Mona Mayhem Workshop (${TRACKS[currentTrack].label})`;
+
+            const contentEl = document.getElementById('markdownContent');
+            contentEl.innerHTML = '<div class="loading">Carregando conteúdo</div>';
+
+            try {
+                const url = GITHUB_RAW_BASE + step.file;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                let md = await res.text();
+                md = processMarkdown(md);
+                const stepDir = step.file.substring(0, step.file.lastIndexOf('/') + 1);
+                md = md.replace(/!\[([^\]]*)\]\((?!https?:\/\/|\/\/)([^)]+)\)/g, (match, alt, path) => {
+                    const cleanPath = path.replace(/^\.\//, '');
+                    return `![${alt}](${GITHUB_RAW_BASE}${stepDir}${cleanPath})`;
+                });
+                contentEl.innerHTML = `<div class="markdown">${marked.parse(md)}</div>`;
+                enableCodeBlockCopyButtons();
+                enableTaskListCheckboxes(step.id);
+
+                if (currentIndex === steps.length - 1 && typeof confetti === 'function') {
+                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                }
+            } catch (err) {
+                contentEl.innerHTML = `
+                    <div class="markdown">
+                        <h1>${step.title}</h1>
+                        <p>Não foi possível carregar o conteúdo. Por favor, verifique o <a href="https://github.com/copilot-dev-days/mona-mayhem" target="_blank">repositório GitHub</a> diretamente.</p>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">Error: ${err.message}</p>
+                    </div>`;
+            }
+        }
+
+        function switchTrack(track) {
+            const nextTrack = normalizeTrack(track);
+            persistTrack(nextTrack);
+            window.location.href = buildStepUrl(steps[currentIndex].id, nextTrack);
+        }
+
+        document.querySelectorAll('.track-btn').forEach((button) => {
+            button.addEventListener('click', () => switchTrack(button.dataset.track));
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') navigate(-1);
+            if (e.key === 'ArrowRight') navigate(1);
+        });
+
+        loadStep(getStepFromURL());
+    </script>
+
+    <script>
+    (function(){
+      var match=location.pathname.match(/\/(pt_BR|es)\//);
+      var locale=match?match[1]:'en';
+      var picker=document.getElementById('localePicker');
+      if(!picker)return;
+      var btn=picker.querySelector('.locale-toggle'),list=picker.querySelector('ul');
+      list.querySelectorAll('li').forEach(function(li){
+        var l=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
+        if(l===locale){li.classList.add('active');li.setAttribute('aria-selected','true');}
+        else{li.classList.remove('active');li.setAttribute('aria-selected','false');}
+      });
+      function open(){list.style.display='block';btn.setAttribute('aria-expanded','true');}
+      function close(){list.style.display='none';btn.setAttribute('aria-expanded','false');}
+      btn.addEventListener('click',function(e){e.stopPropagation();list.style.display==='block'?close():open();});
+      document.addEventListener('click',close);
+      document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+      list.querySelectorAll('li').forEach(function(li){
+        li.addEventListener('click',function(e){
+          e.stopPropagation();
+          var t=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
+          if(t===locale){close();return;}
+          var p=location.pathname;
+          if(locale!=='en')p=p.replace(new RegExp('/'+locale+'/'),'/');;
+          if(t!=='en'){var base=p.replace(/\/index\.html$/,'/');if(!base.endsWith('/'))base+='/';p=base+t+'/';}
+          localStorage.setItem('preferred-locale',t);
+          window.location.href=p;
+        });
+      });
+    })();
+    </script>
+</body>
+</html>
