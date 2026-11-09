@@ -45,7 +45,7 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:4321. The initial page is a welcome screen; the contribution API intentionally returns HTTP 501 until implemented during the workshop.
+Open http://localhost:4321. The page is still a welcome screen; the contribution API is implemented at `/api/contributions/{username}`. See the [API contract, limits and error codes](docs/api-contributions.md).
 
 To verify the base and prepare the documentation portal:
 
@@ -55,7 +55,7 @@ npm run build
 npm run docs:build
 ```
 
-`npm test` checks language navigation, content configuration, and the generated portal. `npm run build` compiles the server app; it does not perform a full TypeScript check. `npm run docs:build` copies the portal and all three languages into `_site/`. Serve that directory with a static HTTP server to preview the deployed portal. When serving the repository root on localhost, `/docs/` also loads lessons directly from `/workshop/`.
+`npm test` checks the contributions API, cache, error handling, language navigation, content configuration, and the generated portal. `npm run build` compiles the server app; it does not perform a full TypeScript check. `npm run docs:build` copies the portal and all three languages into `_site/`. Serve that directory with a static HTTP server to preview the deployed portal. When serving the repository root on localhost, `/docs/` also loads lessons directly from `/workshop/`.
 
 ### Workshop content source
 

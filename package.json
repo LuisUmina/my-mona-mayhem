@@ -7,7 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "node --test",
+    "test": "node --experimental-strip-types --test",
     "docs:build": "node scripts/prepare-docs.mjs"
   },
   "dependencies": {
