@@ -1,0 +1,33 @@
+name: Verify project
+
+on:
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Types, tests and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
+      - name: Save verified workshop portal
+        uses: actions/upload-artifact@v7
+        with:
+          name: workshop-portal
+          path: _site/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7

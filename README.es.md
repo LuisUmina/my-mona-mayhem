@@ -39,12 +39,10 @@ Se requiere npm >=9.6.5. `.nvmrc` fija la versión mínima de Node compatible.
 
 ```sh
 npm ci
-npm test
-npm run build
-npm run docs:build
+npm run verify
 ```
 
-`npm test` verifica la comparación, la API de contribuciones, caché, errores, navegación entre idiomas, configuración del contenido y archivos del portal generado. `npm run build` compila la aplicación de servidor; no realiza una comprobación completa de tipos TypeScript. `npm run dev` permite comparar dos usuarios en http://localhost:4321. La aplicación y su API requieren el servidor Astro Node; GitHub Pages publica la guía del taller.
+`npm run verify` ejecuta las pruebas unitarias, comprueba los tipos TypeScript y Astro, compila la aplicación, prueba el flujo del formulario con la API local y genera el portal. `npm run build` comprueba automáticamente los tipos antes de compilar. Consulta [verificación y CI](docs/verification.md) para ver los comandos y el alcance de las pruebas. `npm run dev` permite comparar dos usuarios en http://localhost:4321. La aplicación y su API requieren el servidor Astro Node; GitHub Pages publica la guía del taller.
 
 `npm run docs:build` genera `_site/` con el portal y las lecciones en los tres idiomas. Sirve esa carpeta con un servidor HTTP estático para previsualizar el despliegue. Si sirves la raíz del repositorio en localhost, también puedes abrir `/docs/` para leer las lecciones de `/workshop/`.
 

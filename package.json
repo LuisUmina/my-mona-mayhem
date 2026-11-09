@@ -4,11 +4,15 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "npm run check",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "node --experimental-strip-types --test",
-    "docs:build": "node scripts/prepare-docs.mjs"
+    "check": "astro check --minimumFailingSeverity warning",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "test:ui": "node --experimental-vm-modules --test --test-concurrency=1 tests/integration/*.test.mjs",
+    "docs:build": "node scripts/prepare-docs.mjs",
+    "verify": "npm test && npm run build && npm run test:ui && npm run docs:build"
   },
   "dependencies": {
     "@astrojs/node": "^10.1.4",
@@ -17,5 +21,11 @@
   "engines": {
     "node": ">=22.12.0",
     "npm": ">=9.6.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^22.20.5",
+    "jsdom": "^27.4.0",
+    "typescript": "^6.0.3"
   }
 }

@@ -39,12 +39,10 @@ Aplicativo Astro de arcade para comparar as contribuições GitHub de dois usuá
 
 ```sh
 npm ci
-npm test
-npm run build
-npm run docs:build
+npm run verify
 ```
 
-`npm test` verifica a comparação, a API de contribuições, cache, erros, navegação entre idiomas, configuração do conteúdo e arquivos do portal gerado. `npm run build` compila o aplicativo de servidor; não executa uma verificação completa de tipos TypeScript. `npm run dev` permite comparar dois usuários em http://localhost:4321. O aplicativo e sua API precisam do servidor Astro Node; o GitHub Pages publica o guia do workshop.
+`npm run verify` executa os testes unitários, verifica os tipos TypeScript e Astro, compila o aplicativo, testa o formulário com a API local e gera o portal. `npm run build` verifica os tipos automaticamente antes de compilar. Consulte [verificação e CI](docs/verification.md) para comandos e escopo dos testes. `npm run dev` permite comparar dois usuários em http://localhost:4321. O aplicativo e sua API precisam do servidor Astro Node; o GitHub Pages publica o guia do workshop.
 
 `npm run docs:build` gera `_site/` com o portal e as lições nos três idiomas. Sirva essa pasta com um servidor HTTP estático para visualizar a publicação. Ao servir a raiz do repositório em localhost, `/docs/` também carrega as lições de `/workshop/`.
 

@@ -50,12 +50,10 @@ Open http://localhost:4321 to compare two GitHub users. See [how the comparison 
 To verify the base and prepare the documentation portal:
 
 ```sh
-npm test
-npm run build
-npm run docs:build
+npm run verify
 ```
 
-`npm test` checks the contributions API, cache, error handling, language navigation, content configuration, and the generated portal. `npm run build` compiles the server app; it does not perform a full TypeScript check. `npm run docs:build` copies the portal and all three languages into `_site/`. Serve that directory with a static HTTP server to preview the deployed portal. When serving the repository root on localhost, `/docs/` also loads lessons directly from `/workshop/`.
+`npm run verify` runs unit tests, source type checking, the production build, compiled-page integration tests, and portal generation. `npm run build` automatically checks TypeScript and Astro types before compiling. See [verification and CI](docs/verification.md) for individual commands and coverage. `npm run docs:build` copies the portal and all three languages into `_site/`. Serve that directory with a static HTTP server to preview the deployed portal. When serving the repository root on localhost, `/docs/` also loads lessons directly from `/workshop/`.
 
 ### Workshop content source
 

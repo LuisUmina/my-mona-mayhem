@@ -43,4 +43,6 @@ GitHub Pages publishes the workshop guide from `_site/`. The interactive applica
 
 ## Checks
 
+Run `npm run verify` for source type checking, unit tests, a production build, compiled-page integration tests and portal generation. See [verification and CI](verification.md) for commands, test coverage and the distinction between DOM integration and real-browser checks.
+
 `npm test` covers parallel requests, winners, ties, periods, malformed data, calendar continuity, leap days, keyboard targets, validation, cancellation and retries, plus the existing API and workshop tests. Real-browser checks cover winning and zero-activity tie results, complete calendars, arrow/Home/End/Tab navigation, previous/next controls, local font loading, and desktop/mobile widths without page overflow.

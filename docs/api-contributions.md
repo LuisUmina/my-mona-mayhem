@@ -70,6 +70,8 @@ Errors return JSON with `error` (a safe message) and `code` (a stable identifier
 
 ## Verification
 
+`npm run verify` also checks source types and exercises the built API together with the interactive page through HTTP using controlled upstream responses. See [verification and CI](verification.md).
+
 `npm test` runs deterministic tests without network access, covering partial weeks, calendar validation, upstream failures, timeout, cache expiry, concurrent request sharing and the HTTP JSON contract. Node's type stripping flag runs the TypeScript service on the minimum supported Node version without an additional test runner.
 
 `npm run build` produces `dist/server/entry.mjs`. Run it with Node on a server host to exercise the built API; GitHub Pages continues to publish documentation only.

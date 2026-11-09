@@ -15,23 +15,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  verify:
+    uses: ./.github/workflows/verify.yml
+    permissions:
+      contents: read
+
   build-and-deploy:
+    needs: verify
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - name: Download verified workshop portal
+        uses: actions/download-artifact@v8
         with:
-          node-version: '22.12.0'
-          cache: npm
-
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
-      - run: npm run docs:build
+          name: workshop-portal
+          path: _site/
 
       - uses: actions/configure-pages@v4
 
