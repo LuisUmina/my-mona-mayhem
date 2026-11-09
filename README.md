@@ -36,13 +36,38 @@ The workshop supports two tracks — follow the one that matches your preferred 
    - **GitHub Copilot CLI:** clone your repo locally, install `copilot`, and work from your terminal.
 3. Follow the [workshop guide](workshop/00-overview.md)
 
+### Run locally
+
+Use Node.js >=22.12.0 and npm >=9.6.5. `.nvmrc` pins the minimum supported Node version.
+
+```sh
+npm ci
+npm run dev
+```
+
+Open http://localhost:4321. The initial page is a welcome screen; the contribution API intentionally returns HTTP 501 until implemented during the workshop.
+
+To verify the base and prepare the documentation portal:
+
+```sh
+npm test
+npm run build
+npm run docs:build
+```
+
+`npm test` checks language navigation, content configuration, and the generated portal. `npm run build` compiles the server app; it does not perform a full TypeScript check. `npm run docs:build` copies the portal and all three languages into `_site/`. Serve that directory with a static HTTP server to preview the deployed portal. When serving the repository root on localhost, `/docs/` also loads lessons directly from `/workshop/`.
+
+### Workshop content source
+
+The portal loads the workshop files included in the deployment, so forks display their own lessons. To use another source, set `contentBase` in `docs/workshop-config.js` to a directory URL containing the English Markdown files and the `es/` and `pt_BR/` subdirectories. Relative URLs resolve from the portal root; external sources must allow browser requests (CORS). Leave it as `null` to use the bundled content.
+
 ## Prerequisites
 
 ### Shared
 
 - GitHub Copilot (Pro, Business, or Enterprise)
 - Git
-- Node.js
+- Node.js >=22.12.0
 
 ### VS Code track
 
@@ -52,7 +77,7 @@ The workshop supports two tracks — follow the one that matches your preferred 
 ### CLI track
 
 - GitHub Copilot CLI (`copilot`)
-- Node.js 22+ if you plan to install the CLI via `npm install -g @github/copilot`
+- Node.js >=22.12.0 if you plan to install the CLI via `npm install -g @github/copilot`
 - Or Homebrew / WinGet if you prefer a native package manager install
 
 ## Technology Stack
@@ -66,7 +91,7 @@ The workshop supports two tracks — follow the one that matches your preferred 
 
 ### Current GitHub Pages setup
 
-The workflow in `.github/workflows/deploy.yml` currently deploys static workshop/docs content from `docs/` and `workshop/` to GitHub Pages. It does not build or deploy the Astro app from `src/`.
+The workflow in `.github/workflows/deploy.yml` installs dependencies, runs regression tests, and builds the Astro app as validation. It then prepares static content from `docs/` and `workshop/` using `npm run docs:build` and deploys `_site/` to GitHub Pages. The Astro server app from `src/` is not deployed to Pages.
 
 ### If you want to deploy the Astro app to GitHub Pages
 

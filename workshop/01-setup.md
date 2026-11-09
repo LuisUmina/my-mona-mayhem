@@ -52,7 +52,7 @@ In this part you'll set up your development environment **and** teach Copilot ab
 
 Use the installation path that matches your machine:
 
-- **npm (cross-platform, requires Node.js 22+)**
+- **npm (cross-platform, requires Node.js >=22.12.0)**
 
   ```bash
   npm install -g @github/copilot

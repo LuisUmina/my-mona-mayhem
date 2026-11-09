@@ -23,14 +23,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Prepare deployment
-        run: |
-          mkdir -p ./_site
-          cp -r docs/* ./_site/
-          mkdir -p ./_site/workshop/pt_BR ./_site/workshop/es
-          cp -r workshop/pt_BR/* ./_site/workshop/pt_BR/
-          cp -r workshop/es/* ./_site/workshop/es/
-          touch ./_site/.nojekyll
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: npm
+
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm run docs:build
 
       - uses: actions/configure-pages@v4
 

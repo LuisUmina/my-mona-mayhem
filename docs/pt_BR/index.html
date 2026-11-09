@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../light-theme.css">
     <script src="../theme-toggle.js"></script>
+    <script src="../workshop-config.js"></script>
+    <script src="../workshop.js"></script>
 </head>
 <body>
     <div class="top-controls">
@@ -192,7 +194,7 @@
                 subtitle: 'Construa uma arena de batalha de contribuições GitHub em estilo retrô arcade enquanto domina os recursos do VS Code Copilot: engenharia de contexto, Plan Mode, Agent Mode, desenvolvimento design-first e fluxos de trabalho multi-agent.',
                 copy: 'Use o workshop VS Code para praticar Chat, Plan Mode, Agent Mode, agentes em segundo plano e o ciclo de revisão no editor.',
                 highlights: ['Chat panel', 'Plan Mode', 'Agent Mode', 'Background agents'],
-                prerequisites: ['VS Code v1.107+', 'GitHub Copilot', 'Node.js 18+', 'Git instalado'],
+                prerequisites: ['VS Code v1.107+', 'GitHub Copilot', 'Node.js >=22.12.0', 'Git instalado'],
                 features: [
                     { icon: '🧠', title: 'Engenharia de Contexto', copy: 'Ensine o Copilot sobre seu código com instruções de workspace, agentes em segundo plano e exploração com o modo Ask.' },
                     { icon: '📋', title: 'Plan Mode', copy: 'Projete a arquitetura antes de codificar — itere nos planos até estarem corretos, depois implemente com confiança.' },
@@ -206,7 +208,7 @@
                 subtitle: 'Construa o mesmo app retrô arcade enquanto aprende fluxos de trabalho nativos do terminal com Copilot: instruções personalizadas, /plan, edições autônomas, paralelismo com /fleet, /delegate e /review.',
                 copy: 'Use o workshop CLI para ficar no terminal enquanto planeja, codifica, revisa e paraleliza trabalho com comandos agentic.',
                 highlights: ['copilot', '/plan', '/fleet', '/delegate', '/review'],
-                prerequisites: ['Plano GitHub Copilot com acesso CLI', 'Copilot CLI instalado via npm (requer Node.js 22+), Homebrew ou WinGet', 'Git instalado', 'Terminal ou shell de sua preferência'],
+                prerequisites: ['Plano GitHub Copilot com acesso CLI', 'Copilot CLI instalado via npm (requer Node.js >=22.12.0), Homebrew ou WinGet', 'Git instalado', 'Terminal ou shell de sua preferência'],
                 features: [
                     { icon: '🛠️', title: 'Instruções & Permissões Personalizadas', copy: 'Inicialize instruções do repositório, ajuste allowlists e dê ao Copilot exatamente o contexto e as ferramentas necessárias.' },
                     { icon: '📋', title: 'Plan & Autopilot', copy: 'Use /plan ou Shift+Tab para criar um plano primeiro, depois deixe o Copilot implementar com sua aprovação.' },
@@ -320,36 +322,6 @@
         renderTrack(getInitialTrack());
     </script>
 
-    <script>
-    (function(){
-      var match=location.pathname.match(/\/(pt_BR|es)\//);
-      var locale=match?match[1]:'en';
-      var picker=document.getElementById('localePicker');
-      if(!picker)return;
-      var btn=picker.querySelector('.locale-toggle'),list=picker.querySelector('ul');
-      list.querySelectorAll('li').forEach(function(li){
-        var l=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
-        if(l===locale){li.classList.add('active');li.setAttribute('aria-selected','true');}
-        else{li.classList.remove('active');li.setAttribute('aria-selected','false');}
-      });
-      function open(){list.style.display='block';btn.setAttribute('aria-expanded','true');}
-      function close(){list.style.display='none';btn.setAttribute('aria-expanded','false');}
-      btn.addEventListener('click',function(e){e.stopPropagation();list.style.display==='block'?close():open();});
-      document.addEventListener('click',close);
-      document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
-      list.querySelectorAll('li').forEach(function(li){
-        li.addEventListener('click',function(e){
-          e.stopPropagation();
-          var t=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
-          if(t===locale){close();return;}
-          var p=location.pathname;
-          if(locale!=='en')p=p.replace(new RegExp('/'+locale+'/'),'/');;
-          if(t!=='en'){var base=p.replace(/\/index\.html$/,'/');if(!base.endsWith('/'))base+='/';p=base+t+'/';}
-          localStorage.setItem('preferred-locale',t);
-          window.location.href=p;
-        });
-      });
-    })();
-    </script>
+
 </body>
 </html>

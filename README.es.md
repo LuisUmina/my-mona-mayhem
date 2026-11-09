@@ -3,7 +3,7 @@
 
 **Taller VS Code GitHub Copilot** — Construye una Arena de Batalla de Contribuciones GitHub
 
-Un sitio web con temática de arcade retro construido con Astro que permite comparar los gráficos de contribución GitHub de dos usuarios. Este taller enseña características de VS Code Copilot a través de la construcción de esta app.
+Plantilla inicial para construir con Astro un sitio de estilo arcade que compare las contribuciones GitHub de dos usuarios. La comparación se implementa durante el taller; la plantilla muestra una bienvenida y su API responde HTTP 501 hasta completar ese ejercicio.
 
 ![Mona Mayhem Screenshot](https://github.com/user-attachments/assets/5eca79e2-cb9f-4e93-aa0d-23666ebde3b7)
 
@@ -23,19 +23,38 @@ Un sitio web con temática de arcade retro construido con Astro que permite comp
 
 1. **Usa esta plantilla** → Crea un nuevo repositorio
 2. Clona y abre en VS Code
-3. Abre el panel de Chat y escribe `/setup`
+3. Instala las dependencias con `npm ci` e inicia la aplicación con `npm run dev`
 4. Sigue la [guía del taller](workshop/es/00-overview.md)
 
 ## Requisitos Previos
 
 - VS Code v1.107+
 - GitHub Copilot (Pro, Business o Enterprise)
-- Node.js 18+
+- Node.js >=22.12.0
 - Git
+
+Se requiere npm >=9.6.5. `.nvmrc` fija la versión mínima de Node compatible.
+
+## Verificación y portal del taller
+
+```sh
+npm ci
+npm test
+npm run build
+npm run docs:build
+```
+
+`npm test` verifica la navegación entre idiomas, la configuración del contenido y los archivos del portal generado. `npm run build` compila la aplicación de servidor; no realiza una comprobación completa de tipos TypeScript. `npm run dev` permite abrir la aplicación en http://localhost:4321.
+
+`npm run docs:build` genera `_site/` con el portal y las lecciones en los tres idiomas. Sirve esa carpeta con un servidor HTTP estático para previsualizar el despliegue. Si sirves la raíz del repositorio en localhost, también puedes abrir `/docs/` para leer las lecciones de `/workshop/`.
+
+El portal usa por defecto el contenido incluido en el despliegue, por lo que cada fork muestra sus propias lecciones. Para cambiar el origen, configura `contentBase` en `docs/workshop-config.js`: debe apuntar a un directorio con los Markdown en inglés y las subcarpetas `es/` y `pt_BR/`. Las rutas relativas parten de la raíz del portal; un origen externo debe permitir CORS. El valor `null` usa el contenido incluido.
+
+El workflow de GitHub Pages instala dependencias, ejecuta las pruebas y compila Astro para validar el proyecto. Publica únicamente `_site/`; la aplicación de servidor requiere un alojamiento Node.
 
 ## Stack Tecnológico
 
-- **Framework**: [Astro](https://astro.build/) v5
+- **Framework**: [Astro](https://astro.build/) v6
 - **Runtime**: Node.js con adaptador [@astrojs/node](https://docs.astro.build/en/guides/integrations-guide/node/)
 - **Fuente**: Press Start 2P (fuente de juegos retro)
 - **API**: API de gráfico de contribuciones de GitHub

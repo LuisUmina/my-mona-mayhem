@@ -53,7 +53,7 @@ Nesta parte você vai configurar seu ambiente de desenvolvimento **e** ensinar o
 
 Use o caminho de instalação que corresponde à sua máquina:
 
-- **npm (multiplataforma, requer Node.js 22+)**
+- **npm (multiplataforma, requer Node.js >=22.12.0)**
 
   ```bash
   npm install -g @github/copilot

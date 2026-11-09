@@ -24,7 +24,7 @@ Follow the track that matches your preferred workflow.
 Before you begin, verify:
 
 - [ ] GitHub Copilot is enabled for your account
-- [ ] Node.js installed
+- [ ] Node.js >=22.12.0 installed
 - [ ] Git installed and configured
 - [ ] Your browser and terminal are both ready
 

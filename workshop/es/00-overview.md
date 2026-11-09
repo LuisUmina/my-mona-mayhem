@@ -25,7 +25,7 @@ Sigue la pista que coincida con tu flujo de trabajo preferido.
 Antes de empezar, verifica:
 
 - [ ] GitHub Copilot está habilitado para tu cuenta
-- [ ] Node.js instalado
+- [ ] Node.js >=22.12.0 instalado
 - [ ] Git instalado y configurado
 - [ ] Tu navegador y terminal están listos
 

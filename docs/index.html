@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="light-theme.css">
     <script src="theme-toggle.js"></script>
+    <script src="workshop-config.js"></script>
+    <script src="workshop.js"></script>
 </head>
 <body>
     <div class="top-controls">
@@ -192,7 +194,7 @@
                 subtitle: 'Build a retro arcade GitHub Contribution Battle Arena while mastering VS Code Copilot features: context engineering, Plan Mode, Agent Mode, design-first development, and multi-agent workflows.',
                 copy: 'Use the VS Code workshop to practice Chat, Plan Mode, Agent Mode, background agents, and the editor-based review loop.',
                 highlights: ['Chat panel', 'Plan Mode', 'Agent Mode', 'Background agents'],
-                prerequisites: ['VS Code v1.107+', 'GitHub Copilot', 'Node.js 18+', 'Git installed'],
+                prerequisites: ['VS Code v1.107+', 'GitHub Copilot', 'Node.js >=22.12.0', 'Git installed'],
                 features: [
                     { icon: '🧠', title: 'Context Engineering', copy: 'Teach Copilot about your codebase with workspace instructions, background agents, and Ask mode exploration.' },
                     { icon: '📋', title: 'Plan Mode', copy: 'Design architecture before coding — iterate on plans until they\'re right, then implement with confidence.' },
@@ -206,7 +208,7 @@
                 subtitle: 'Build the same retro arcade app while learning terminal-native Copilot workflows: custom instructions, /plan, autonomous edits, /fleet parallelism, /delegate, and /review.',
                 copy: 'Use the CLI workshop to stay in the terminal while you plan, code, review, and parallelize work with agentic commands.',
                 highlights: ['copilot', '/plan', '/fleet', '/delegate', '/review'],
-                prerequisites: ['GitHub Copilot plan with CLI access', 'Copilot CLI installed via npm (requires Node.js 22+), Homebrew, or WinGet', 'Git installed', 'Terminal or shell of your choice'],
+                prerequisites: ['GitHub Copilot plan with CLI access', 'Copilot CLI installed via npm (requires Node.js >=22.12.0), Homebrew, or WinGet', 'Git installed', 'Terminal or shell of your choice'],
                 features: [
                     { icon: '🛠️', title: 'Custom Instructions & Permissions', copy: 'Initialize repo instructions, tune allowlists, and give Copilot exactly the context and tools it needs.' },
                     { icon: '📋', title: 'Plan & Autopilot', copy: 'Use /plan or Shift+Tab to draft a plan first, then let Copilot implement with your approval.' },
@@ -320,36 +322,6 @@
         renderTrack(getInitialTrack());
     </script>
 
-    <script>
-    (function(){
-      var match=location.pathname.match(/\/(pt_BR|es)\//);
-      var locale=match?match[1]:'en';
-      var picker=document.getElementById('localePicker');
-      if(!picker)return;
-      var btn=picker.querySelector('.locale-toggle'),list=picker.querySelector('ul');
-      list.querySelectorAll('li').forEach(function(li){
-        var l=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
-        if(l===locale){li.classList.add('active');li.setAttribute('aria-selected','true');}
-        else{li.classList.remove('active');li.setAttribute('aria-selected','false');}
-      });
-      function open(){list.style.display='block';btn.setAttribute('aria-expanded','true');}
-      function close(){list.style.display='none';btn.setAttribute('aria-expanded','false');}
-      btn.addEventListener('click',function(e){e.stopPropagation();list.style.display==='block'?close():open();});
-      document.addEventListener('click',close);
-      document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
-      list.querySelectorAll('li').forEach(function(li){
-        li.addEventListener('click',function(e){
-          e.stopPropagation();
-          var t=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
-          if(t===locale){close();return;}
-          var p=location.pathname;
-          if(locale!=='en')p=p.replace(new RegExp('/'+locale+'/'),'/');;
-          if(t!=='en'){var base=p.replace(/\/index\.html$/,'/');if(!base.endsWith('/'))base+='/';p=base+t+'/';}
-          localStorage.setItem('preferred-locale',t);
-          window.location.href=p;
-        });
-      });
-    })();
-    </script>
+
 </body>
 </html>

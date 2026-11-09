@@ -3,7 +3,7 @@
 
 **Workshop VS Code GitHub Copilot** — Construa uma Arena de Batalha de Contribuições GitHub
 
-Um site com tema de arcade retrô construído com Astro que permite comparar os gráficos de contribuição GitHub de dois usuários. Este workshop ensina recursos do VS Code Copilot através da construção deste app.
+Template inicial para construir com Astro um site de arcade que compare as contribuições GitHub de dois usuários. A comparação é implementada durante o workshop; o template exibe uma mensagem de boas-vindas e a API retorna HTTP 501 até concluir esse exercício.
 
 ![Mona Mayhem Screenshot](https://github.com/user-attachments/assets/5eca79e2-cb9f-4e93-aa0d-23666ebde3b7)
 
@@ -23,19 +23,38 @@ Um site com tema de arcade retrô construído com Astro que permite comparar os 
 
 1. **Use este template** → Crie um novo repositório
 2. Clone e abra no VS Code
-3. Abra o painel do Chat e digite `/setup`
+3. Instale as dependências com `npm ci` e inicie o aplicativo com `npm run dev`
 4. Siga o [guia do workshop](workshop/pt_BR/00-overview.md)
 
 ## Pré-requisitos
 
 - VS Code v1.107+
 - GitHub Copilot (Pro, Business ou Enterprise)
-- Node.js 18+
+- Node.js >=22.12.0
 - Git
+
+É necessário npm >=9.6.5. `.nvmrc` fixa a versão mínima compatível do Node.
+
+## Verificação e portal do workshop
+
+```sh
+npm ci
+npm test
+npm run build
+npm run docs:build
+```
+
+`npm test` verifica a navegação entre idiomas, a configuração do conteúdo e os arquivos do portal gerado. `npm run build` compila o aplicativo de servidor; não executa uma verificação completa de tipos TypeScript. `npm run dev` disponibiliza o aplicativo em http://localhost:4321.
+
+`npm run docs:build` gera `_site/` com o portal e as lições nos três idiomas. Sirva essa pasta com um servidor HTTP estático para visualizar a publicação. Ao servir a raiz do repositório em localhost, `/docs/` também carrega as lições de `/workshop/`.
+
+Por padrão, o portal usa o conteúdo incluído na publicação, permitindo que forks exibam suas próprias lições. Para alterar a origem, configure `contentBase` em `docs/workshop-config.js`: o diretório deve conter os Markdown em inglês e as subpastas `es/` e `pt_BR/`. URLs relativas partem da raiz do portal; origens externas devem permitir CORS. O valor `null` usa o conteúdo incluído.
+
+O workflow do GitHub Pages instala dependências, executa testes e compila Astro para validar o projeto. Publica apenas `_site/`; o aplicativo de servidor requer hospedagem Node.
 
 ## Stack Tecnológica
 
-- **Framework**: [Astro](https://astro.build/) v5
+- **Framework**: [Astro](https://astro.build/) v6
 - **Runtime**: Node.js com adaptador [@astrojs/node](https://docs.astro.build/en/guides/integrations-guide/node/)
 - **Fonte**: Press Start 2P (fonte de jogos retrô)
 - **API**: API de gráfico de contribuições do GitHub

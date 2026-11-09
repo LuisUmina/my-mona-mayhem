@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="../step.css">
     <link rel="stylesheet" href="../light-theme.css">
     <script src="../theme-toggle.js"></script>
+    <script src="../workshop-config.js"></script>
+    <script src="../workshop.js"></script>
 </head>
 <body>
     <header class="header">
@@ -93,8 +95,7 @@
             { id: '06-bonus', file: '06-bonus.md', title: 'Bônus & Extensões', number: '🎉' },
         ];
 
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
-        const GITHUB_RAW_BASE = isLocal ? '../../workshop/pt_BR/' : 'https://raw.githubusercontent.com/copilot-dev-days/mona-mayhem/main/workshop/pt_BR/';
+        const GITHUB_RAW_BASE = MonaWorkshop.contentBase('pt_BR');
         const STEP_ID_PATTERN = /^[a-z0-9-]{1,64}$/;
         const WHITESPACE_NORMALIZE_PATTERN = /[\s\n]+/g;
         const COPY_BUTTON_RESET_DELAY_MS = 2000;
@@ -435,36 +436,6 @@
         loadStep(getStepFromURL());
     </script>
 
-    <script>
-    (function(){
-      var match=location.pathname.match(/\/(pt_BR|es)\//);
-      var locale=match?match[1]:'en';
-      var picker=document.getElementById('localePicker');
-      if(!picker)return;
-      var btn=picker.querySelector('.locale-toggle'),list=picker.querySelector('ul');
-      list.querySelectorAll('li').forEach(function(li){
-        var l=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
-        if(l===locale){li.classList.add('active');li.setAttribute('aria-selected','true');}
-        else{li.classList.remove('active');li.setAttribute('aria-selected','false');}
-      });
-      function open(){list.style.display='block';btn.setAttribute('aria-expanded','true');}
-      function close(){list.style.display='none';btn.setAttribute('aria-expanded','false');}
-      btn.addEventListener('click',function(e){e.stopPropagation();list.style.display==='block'?close():open();});
-      document.addEventListener('click',close);
-      document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
-      list.querySelectorAll('li').forEach(function(li){
-        li.addEventListener('click',function(e){
-          e.stopPropagation();
-          var t=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
-          if(t===locale){close();return;}
-          var p=location.pathname;
-          if(locale!=='en')p=p.replace(new RegExp('/'+locale+'/'),'/');;
-          if(t!=='en'){var base=p.replace(/\/index\.html$/,'/');if(!base.endsWith('/'))base+='/';p=base+t+'/';}
-          localStorage.setItem('preferred-locale',t);
-          window.location.href=p;
-        });
-      });
-    })();
-    </script>
+
 </body>
 </html>

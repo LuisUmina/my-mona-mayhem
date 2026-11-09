@@ -53,7 +53,7 @@ En esta parte configurarás tu entorno de desarrollo **y** enseñarás a Copilot
 
 Usa la ruta de instalación que corresponda a tu máquina:
 
-- **npm (multiplataforma, requiere Node.js 22+)**
+- **npm (multiplataforma, requiere Node.js >=22.12.0)**
 
   ```bash
   npm install -g @github/copilot
