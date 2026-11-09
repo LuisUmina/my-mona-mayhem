@@ -4,7 +4,7 @@
 
 **VS Code & GitHub Copilot CLI Workshop** — Build a GitHub Contribution Battle Arena
 
-A workshop template for building a retro arcade-themed website with Astro that compares GitHub contribution graphs of two users. This is the **starting point** — you'll build the app step by step using GitHub Copilot.
+A workshop project for building a retro arcade-themed website with Astro that compares two GitHub users. The API and contribution-total comparison screen are implemented; calendar heatmaps and further visual polish are the next phase.
 
 ![Mona Mayhem Screenshot](https://github.com/user-attachments/assets/5eca79e2-cb9f-4e93-aa0d-23666ebde3b7)
 *What you'll build by the end of the workshop*
@@ -45,7 +45,7 @@ npm ci
 npm run dev
 ```
 
-Open http://localhost:4321. The page is still a welcome screen; the contribution API is implemented at `/api/contributions/{username}`. See the [API contract, limits and error codes](docs/api-contributions.md).
+Open http://localhost:4321 to compare two GitHub users. See [how the comparison works](docs/battle.md) and the [API contract, limits and error codes](docs/api-contributions.md). GitHub Pages publishes the separate workshop guide; the application runs on the Astro Node server.
 
 To verify the base and prepare the documentation portal:
 

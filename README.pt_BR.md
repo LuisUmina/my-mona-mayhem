@@ -3,7 +3,7 @@
 
 **Workshop VS Code GitHub Copilot** — Construa uma Arena de Batalha de Contribuições GitHub
 
-Projeto para construir com Astro um site de arcade que compare as contribuições GitHub de dois usuários. A página exibe boas-vindas; a API já está implementada em `/api/contributions/{username}`. Consulte o [contrato, os limites e os códigos de erro](docs/api-contributions.md). A interface de comparação fica para a próxima fase.
+Projeto para construir com Astro um site de arcade que compare as contribuições GitHub de dois usuários. A API e a tela de comparação já funcionam: exibem totais, período e vencedor ou empate. Consulte o [funcionamento da comparação](docs/battle.md) e o [contrato da API](docs/api-contributions.md). Os calendários de contribuições ficam para a fase 4.
 
 ![Mona Mayhem Screenshot](https://github.com/user-attachments/assets/5eca79e2-cb9f-4e93-aa0d-23666ebde3b7)
 
@@ -44,7 +44,7 @@ npm run build
 npm run docs:build
 ```
 
-`npm test` verifica a API de contribuições, cache, erros, navegação entre idiomas, configuração do conteúdo e arquivos do portal gerado. `npm run build` compila o aplicativo de servidor; não executa uma verificação completa de tipos TypeScript. `npm run dev` disponibiliza o aplicativo em http://localhost:4321.
+`npm test` verifica a comparação, a API de contribuições, cache, erros, navegação entre idiomas, configuração do conteúdo e arquivos do portal gerado. `npm run build` compila o aplicativo de servidor; não executa uma verificação completa de tipos TypeScript. `npm run dev` permite comparar dois usuários em http://localhost:4321. O aplicativo e sua API precisam do servidor Astro Node; o GitHub Pages publica o guia do workshop.
 
 `npm run docs:build` gera `_site/` com o portal e as lições nos três idiomas. Sirva essa pasta com um servidor HTTP estático para visualizar a publicação. Ao servir a raiz do repositório em localhost, `/docs/` também carrega as lições de `/workshop/`.
 

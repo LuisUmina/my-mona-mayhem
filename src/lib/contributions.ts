@@ -1,3 +1,5 @@
+import { isGitHubUsername } from './github-username.ts';
+
 /** Data exposed by our API, independent of GitHub's upstream response format. */
 export interface ContributionDay {
     date: string;
@@ -32,7 +34,6 @@ export class ContributionError extends Error {
 }
 
 const DAY_MS = 86_400_000;
-const USERNAME = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
 
 function requireValid(condition: unknown): asserts condition {
     if (!condition) throw new ContributionError(502, 'INVALID_UPSTREAM_DATA', 'GitHub returned an unsupported contribution response.');
@@ -149,7 +150,7 @@ export function createContributionService(options: ServiceOptions = {}) {
     }
 
     return async function getContributions(input: string | undefined): Promise<Contributions> {
-        if (!input || !USERNAME.test(input)) {
+        if (!input || !isGitHubUsername(input)) {
             throw new ContributionError(400, 'INVALID_USERNAME', 'Use a GitHub username of 1–39 letters, digits, or single internal hyphens.');
         }
         const username = input.toLowerCase();

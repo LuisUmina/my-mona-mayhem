@@ -1,17 +1,88 @@
 ---
-
+import '../styles/battle.css';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Mona Mayhem</title>
-	</head>
-	<body>
-		<h1>Mona Mayhem</h1>
-		<p>Welcome to Mona Mayhem! Time to build a GitHub Contribution Battle Arena.</p>
-	</body>
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Compara las contribuciones de dos usuarios de GitHub en Mona Mayhem. Mismo período, una batalla." />
+        <title>Mona Mayhem · Arena de contribuciones</title>
+    </head>
+    <body>
+        <a class="skip-link" href="#arena">Ir a la comparación</a>
+        <div class="page-shell">
+            <header class="site-header">
+                <a class="brand" href="/" aria-label="Mona Mayhem, inicio"><span class="brand-mark" aria-hidden="true">M</span> MONA MAYHEM</a>
+                <span class="header-tag">GITHUB CONTRIBUTION ARENA</span>
+            </header>
+
+            <main id="arena">
+                <section class="intro" aria-labelledby="page-title">
+                    <p class="eyebrow"><span aria-hidden="true">●</span> DOS JUGADORES. UN MISMO PERÍODO.</p>
+                    <h1 id="page-title">Que hablen las<br /><span>contribuciones.</span></h1>
+                    <p class="intro-copy">Elige dos usuarios de GitHub y descubre quién suma más. Cada contribución cuenta.</p>
+                </section>
+
+                <section class="arena-panel" aria-label="Comparar usuarios de GitHub">
+                    <form id="battle-form" novalidate aria-describedby="username-help" aria-busy="false">
+                        <fieldset id="battle-fields">
+                            <legend class="sr-only">Elige a los dos jugadores</legend>
+                            <div class="players-form">
+                                <div class="player-input">
+                                    <label for="player-one"><span class="player-number">01</span> Jugador 1</label>
+                                    <div class="input-shell"><span aria-hidden="true">@</span><input id="player-one" name="player-one" type="text" placeholder="octocat" maxlength="39" required autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="username-help battle-error" /></div>
+                                </div>
+                                <span class="versus" aria-hidden="true">VS</span>
+                                <div class="player-input player-two">
+                                    <label for="player-two"><span class="player-number">02</span> Jugador 2</label>
+                                    <div class="input-shell"><span aria-hidden="true">@</span><input id="player-two" name="player-two" type="text" placeholder="torvalds" maxlength="39" required autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="username-help battle-error" /></div>
+                                </div>
+                            </div>
+                            <div class="form-bottom">
+                                <p id="username-help">Escribe los nombres de usuario, sin @.<br />También puedes comparar pulsando Enter.</p>
+                                <button id="compare-button" type="submit">Comparar contribuciones</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <p id="battle-status" class="status" role="status" aria-live="polite" aria-atomic="true"></p>
+                    <p id="battle-error" class="error" role="alert" tabindex="-1" hidden></p>
+                    <noscript><p class="error">Activa JavaScript en tu navegador para comparar los usuarios.</p></noscript>
+                </section>
+
+                <section id="empty-state" class="empty-state" aria-label="Cómo funciona">
+                    <span class="empty-icon" aria-hidden="true">↔</span>
+                    <div><h2>La arena está lista.</h2><p>Introduce dos usuarios para ver sus totales y el resultado de la batalla.</p></div>
+                </section>
+
+                <section id="battle-results" class="results" aria-labelledby="result-title" hidden>
+                    <div class="result-summary">
+                        <p class="eyebrow">RESULTADO DE LA BATALLA</p>
+                        <h2 id="result-title" tabindex="-1"></h2>
+                        <p id="result-detail"></p>
+                        <p id="result-period" class="period"></p>
+                    </div>
+                    <div class="scoreboard">
+                        {[0, 1].map((index) => (
+                            <article id={`result-player-${index}`} class:list={['score-card', { 'player-two': index === 1 }]} aria-label={`Resultado del jugador ${index + 1}`}>
+                                <div class="score-header"><span class="player-number">0{index + 1}</span><span class="result-badge" data-result-badge></span></div>
+                                <h3><a data-result-user></a></h3>
+                                <p class="score" data-result-total></p>
+                                <p class="score-label">contribuciones en el período</p>
+                                <p class="privacy-note" data-result-privacy></p>
+                            </article>
+                        ))}
+                    </div>
+                    <p class="comparison-note">El resultado compara el total de contribuciones del mismo período.</p>
+                </section>
+            </main>
+
+            <footer><span>MONA MAYHEM <span aria-hidden="true">/</span> CADA CONTRIBUCIÓN CUENTA</span><a href="https://github.com/LuisUmina/my-mona-mayhem">Ver proyecto en GitHub ↗</a></footer>
+        </div>
+        <script>
+            import '../scripts/battle.ts';
+        </script>
+    </body>
 </html>

@@ -12,7 +12,7 @@ curl http://localhost:4321/api/contributions/octocat
 
 The server requests `https://github.com/{username}.contribs` with JSON accept headers. This public endpoint currently supplies schema `v2` without a token. It is a GitHub website endpoint rather than a versioned REST/GraphQL API; changes to its format are rejected with a controlled `502` instead of exposing incorrect results. There is no automatic fallback to another provider.
 
-The API uses GitHub's default rolling contribution period and returns its exact inclusive `from` and `to` dates. Dates are interpreted in UTC. Custom periods/query parameters are not supported in this phase. The comparison page must verify that both responses cover the same period.
+The API uses GitHub's default rolling contribution period and returns its exact inclusive `from` and `to` dates. Dates are interpreted in UTC. Custom periods/query parameters are not supported in this phase. The comparison page verifies that both responses cover the same period before declaring a result.
 
 `privateContributionsIncluded` preserves the source's flag; consumers should display it rather than assuming all counts are public-only. No repository details or credentials are returned.
 
