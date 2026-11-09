@@ -15,6 +15,7 @@ The app fetches both users in parallel and displays:
 - The inclusive date range and number of days compared.
 - The winner and contribution difference, or a tie when totals match (including zero).
 - Whether GitHub reports private contribution counts as included.
+- A complete daily contribution calendar for each user, with month and weekday labels.
 
 Usernames are trimmed, normalized to lowercase and validated before requesting data. Comparing the same user is allowed and produces a tie. The app only declares a result when both responses have the same period.
 
@@ -22,7 +23,17 @@ While a comparison is loading, fields and the submit button are disabled to prev
 
 The form has explicit labels, keyboard submission, live status/error messages and focus management. Results become the focus after success; invalid or missing usernames focus the affected input. Without JavaScript, the page explains that it must be enabled.
 
-Calendar heatmaps and the full arcade visual treatment belong to phase 4. The current screen compares contribution totals.
+## Interactive calendars and arcade theme
+
+Each square is one actual day from the API, including zero-activity days and partial weeks. The browser checks the calendar's date continuity, week order, weekdays, total, counts and levels before rendering it. No days are fabricated or padded with contributions.
+
+The five greens represent intensity relative to each user's own activity, not identical absolute thresholds across users. The legend explains direction; the day inspector provides the exact date and count without relying on color. Hover over a day, click/tap it, or focus it to inspect its details.
+
+Each calendar has one keyboard entry point, initially the latest day. Use **Up/Down** for the previous/next day, **Left/Right** for the previous/next week, and **Home/End** for the first/last day. **Tab** leaves the calendar instead of stopping at every square. The 44-pixel previous/next controls are an alternative for touch input. Focused dates are scrolled into view without animated scrolling.
+
+Calendars sit side by side on wide screens and stack on narrower ones. On mobile, the year scrolls inside its calendar; the page itself stays within the viewport. A persistent detail panel avoids floating tooltips covering the graph or disappearing on touch devices.
+
+The arcade styling uses the locally served Press Start 2P font, a pixel favicon, and lime/lavender accents. The original font license is included in `public/fonts/OFL.txt`. Short result transitions and button effects are disabled when `prefers-reduced-motion: reduce` is active. No flashing effects or external font requests are used.
 
 ## Application versus workshop portal
 
@@ -32,4 +43,4 @@ GitHub Pages publishes the workshop guide from `_site/`. The interactive applica
 
 ## Checks
 
-`npm test` includes deterministic comparison tests for parallel requests, winners in either position, ties, matching periods, malformed data, validation, cancellation and retries, in addition to the existing API and workshop tests. The comparison page was also checked in a real browser for empty inputs, Enter submission, a real winning result, a nonexistent user, recovery to a tie, and a mobile breakpoint.
+`npm test` covers parallel requests, winners, ties, periods, malformed data, calendar continuity, leap days, keyboard targets, validation, cancellation and retries, plus the existing API and workshop tests. Real-browser checks cover winning and zero-activity tie results, complete calendars, arrow/Home/End/Tab navigation, previous/next controls, local font loading, and desktop/mobile widths without page overflow.

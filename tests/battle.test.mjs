@@ -2,10 +2,18 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { BattleError, comparePlayers, runBattle, validatePlayers } from '../src/lib/battle.ts';
 
-const player = (username, totalContributions = 10, changes = {}) => ({
-    username, totalContributions, from: '2026-01-01', to: '2026-01-07', rangeDays: 7,
-    privateContributionsIncluded: false, ...changes,
-});
+const player = (username, totalContributions = 10, changes = {}) => {
+    const weeks = [
+        { firstDay: '2025-12-28', contributionDays: [] },
+        { firstDay: '2026-01-04', contributionDays: [] },
+    ];
+    for (let index = 0; index < 7; index++) {
+        const date = `2026-01-0${index + 1}`;
+        const weekday = new Date(`${date}T00:00:00Z`).getUTCDay();
+        weeks[index < 3 ? 0 : 1].contributionDays.push({ date, weekday, contributionCount: index === 0 ? totalContributions : 0, level: index === 0 && totalContributions > 0 ? 2 : 0, color: '#40c463' });
+    }
+    return { username, totalContributions, from: '2026-01-01', to: '2026-01-07', rangeDays: 7, privateContributionsIncluded: false, weeks, ...changes };
+};
 
 test('validates both players, trims whitespace and normalizes casing before querying', async () => {
     assert.deepEqual(validatePlayers('  Octocat ', ' LuisUmina  '), ['octocat', 'luisumina']);
@@ -46,6 +54,7 @@ test('starts both requests in parallel and passes the shared cancellation signal
     const result = await pending;
     assert.equal(result.winner, 1);
     assert.equal(result.players[1].privateContributionsIncluded, true);
+    assert.equal(result.players[1].weeks.flatMap((week) => week.contributionDays).length, 7);
 });
 
 test('permits comparing the same username and returns a tie', async () => {
@@ -75,7 +84,7 @@ test('handles unavailable service, server timeout and network errors with action
 });
 
 test('rejects malformed JSON and incomplete or inconsistent successful responses', async () => {
-    for (const data of [null, {}, [], player('other-user'), player('one', -1), player('one', 1.5), player('one', 10, { from: '2026-02-30' }), player('one', 10, { rangeDays: 8 }), player('one', 10, { privateContributionsIncluded: 'yes' })]) {
+    for (const data of [null, {}, [], player('other-user'), player('one', -1), player('one', 1.5), player('one', 10, { from: '2026-02-30' }), player('one', 10, { rangeDays: 8 }), player('one', 10, { privateContributionsIncluded: 'yes' }), player('one', 10, { weeks: [] })]) {
         await assert.rejects(runBattle('one', 'two', { fetcher: async (url) => Response.json(url.endsWith('one') ? data : player('two')) }), /datos válidos/);
     }
     await assert.rejects(runBattle('one', 'two', { fetcher: async () => new Response('<html>not JSON</html>') }), /leer la respuesta/);

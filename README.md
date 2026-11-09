@@ -4,7 +4,7 @@
 
 **VS Code & GitHub Copilot CLI Workshop** — Build a GitHub Contribution Battle Arena
 
-A workshop project for building a retro arcade-themed website with Astro that compares two GitHub users. The API and contribution-total comparison screen are implemented; calendar heatmaps and further visual polish are the next phase.
+A workshop project built with Astro to compare two GitHub users. The app includes a contribution API, winners and ties, interactive daily calendars, and a responsive arcade interface with keyboard navigation and reduced-motion support.
 
 ![Mona Mayhem Screenshot](https://github.com/user-attachments/assets/5eca79e2-cb9f-4e93-aa0d-23666ebde3b7)
 *What you'll build by the end of the workshop*

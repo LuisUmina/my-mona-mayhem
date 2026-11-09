@@ -1,5 +1,6 @@
 import { BattleError, runBattle, validatePlayers } from '../lib/battle.ts';
 import type { BattleResult } from '../lib/battle.ts';
+import { renderCalendar } from './calendar.ts';
 
 const form = document.querySelector<HTMLFormElement>('#battle-form')!;
 const fieldset = document.querySelector<HTMLFieldSetElement>('#battle-fields')!;
@@ -16,6 +17,7 @@ let busy = false;
 
 function renderResult(result: BattleResult) {
     const { players, winner, difference } = result;
+    document.querySelector('#result-kicker')!.textContent = winner === null ? 'PARTIDA IGUALADA' : 'VICTORIA CONFIRMADA';
     resultTitle.textContent = winner === null ? '¡Empate!' : `@${players[winner].username} gana la batalla`;
     document.querySelector('#result-detail')!.textContent = winner === null
         ? 'Los dos jugadores tienen el mismo total de contribuciones.'
@@ -32,9 +34,11 @@ function renderResult(result: BattleResult) {
         card.querySelector('[data-result-privacy]')!.textContent = player.privateContributionsIncluded
             ? 'GitHub incluye conteos de contribuciones privadas.'
             : 'GitHub no incluye conteos de contribuciones privadas.';
+        renderCalendar(card.querySelector<HTMLElement>('[data-calendar]')!, player);
     });
     empty.hidden = true;
     results.hidden = false;
+    results.querySelectorAll<HTMLElement>('[data-calendar-scroll]').forEach((scroll) => scroll.scrollLeft = scroll.scrollWidth);
 }
 
 function showError(error: unknown) {

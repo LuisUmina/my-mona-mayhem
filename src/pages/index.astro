@@ -1,5 +1,6 @@
 ---
 import '../styles/battle.css';
+import { CALENDAR_COLORS } from '../lib/calendar.ts';
 ---
 
 <!doctype html>
@@ -9,6 +10,7 @@ import '../styles/battle.css';
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="Compara las contribuciones de dos usuarios de GitHub en Mona Mayhem. Mismo período, una batalla." />
+        <link rel="preload" href="/fonts/PressStart2P-Regular.ttf" as="font" type="font/ttf" crossorigin />
         <title>Mona Mayhem · Arena de contribuciones</title>
     </head>
     <body>
@@ -21,7 +23,7 @@ import '../styles/battle.css';
 
             <main id="arena">
                 <section class="intro" aria-labelledby="page-title">
-                    <p class="eyebrow"><span aria-hidden="true">●</span> DOS JUGADORES. UN MISMO PERÍODO.</p>
+                    <p class="eyebrow"><span class="ready-dot" aria-hidden="true"></span> DOS JUGADORES. UN MISMO PERÍODO.</p>
                     <h1 id="page-title">Que hablen las<br /><span>contribuciones.</span></h1>
                     <p class="intro-copy">Elige dos usuarios de GitHub y descubre quién suma más. Cada contribución cuenta.</p>
                 </section>
@@ -54,12 +56,12 @@ import '../styles/battle.css';
 
                 <section id="empty-state" class="empty-state" aria-label="Cómo funciona">
                     <span class="empty-icon" aria-hidden="true">↔</span>
-                    <div><h2>La arena está lista.</h2><p>Introduce dos usuarios para ver sus totales y el resultado de la batalla.</p></div>
+                    <div><h2>La arena está lista.</h2><p>Elige dos jugadores. Compara sus calendarios. Descubre quién suma más.</p></div>
                 </section>
 
                 <section id="battle-results" class="results" aria-labelledby="result-title" hidden>
                     <div class="result-summary">
-                        <p class="eyebrow">RESULTADO DE LA BATALLA</p>
+                        <p id="result-kicker" class="eyebrow">RESULTADO DE LA BATALLA</p>
                         <h2 id="result-title" tabindex="-1"></h2>
                         <p id="result-detail"></p>
                         <p id="result-period" class="period"></p>
@@ -71,11 +73,29 @@ import '../styles/battle.css';
                                 <h3><a data-result-user></a></h3>
                                 <p class="score" data-result-total></p>
                                 <p class="score-label">contribuciones en el período</p>
+                                <section class="calendar" data-calendar aria-labelledby={`calendar-title-${index}`}>
+                                    <h4 id={`calendar-title-${index}`}>Actividad diaria</h4>
+                                    <p id={`calendar-help-${index}`} class="calendar-help">Toca o enfoca un día. ↑↓ día · ←→ semana · Inicio/Fin extremos.</p>
+                                    <div class="calendar-scroll" data-calendar-scroll role="group" aria-describedby={`calendar-help-${index}`}>
+                                        <div class="calendar-plot" data-calendar-plot>
+                                            <div class="calendar-months" data-calendar-months aria-hidden="true"></div>
+                                            <div class="calendar-weekdays" aria-hidden="true">{['D', 'L', 'M', 'X', 'J', 'V', 'S'].map((day) => <span>{day}</span>)}</div>
+                                            <div class="calendar-days" data-calendar-days></div>
+                                        </div>
+                                    </div>
+                                    <div class="calendar-legend" aria-label="Intensidad relativa: de menos a más contribuciones">
+                                        <span>Menos</span>{CALENDAR_COLORS.map((color) => <span class="legend-swatch" style={{ backgroundColor: color }} aria-hidden="true"></span>)}<span>Más</span>
+                                    </div>
+                                    <div class="calendar-inspector">
+                                        <p class="calendar-detail" data-calendar-detail role="status" aria-live="polite" aria-atomic="true"></p>
+                                        <div class="calendar-controls"><button type="button" data-calendar-previous aria-label="Día anterior">←</button><button type="button" data-calendar-next aria-label="Día siguiente">→</button></div>
+                                    </div>
+                                </section>
                                 <p class="privacy-note" data-result-privacy></p>
                             </article>
                         ))}
                     </div>
-                    <p class="comparison-note">El resultado compara el total de contribuciones del mismo período.</p>
+                    <p class="comparison-note">Gana el mayor total del mismo período. Los colores indican intensidad relativa dentro del calendario de cada usuario; consulta el conteo exacto de cada día para comparar.</p>
                 </section>
             </main>
 

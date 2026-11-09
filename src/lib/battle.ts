@@ -1,8 +1,9 @@
 import type { Contributions } from './contributions.ts';
 import { isGitHubUsername } from './github-username.ts';
+import { isCalendarDate, readCalendar } from './calendar.ts';
 
 export type BattlePlayer = Pick<Contributions,
-    'username' | 'from' | 'to' | 'rangeDays' | 'totalContributions' | 'privateContributionsIncluded'>;
+    'username' | 'from' | 'to' | 'rangeDays' | 'totalContributions' | 'privateContributionsIncluded' | 'weeks'>;
 
 export interface BattleResult {
     players: [BattlePlayer, BattlePlayer];
@@ -31,25 +32,22 @@ export function validatePlayers(first: string, second: string): [string, string]
     }) as [string, string];
 }
 
-function isDate(value: unknown): value is string {
-    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-    const date = new Date(`${value}T00:00:00Z`);
-    return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
-}
-
 function readPlayer(value: unknown, username: string): BattlePlayer {
     if (!value || typeof value !== 'object') throw new BattleError('La respuesta no contiene datos válidos. Vuelve a intentarlo.');
     const data = value as Record<string, unknown>;
-    if (data.username !== username || !isDate(data.from) || !isDate(data.to)
+    if (data.username !== username || !isCalendarDate(data.from) || !isCalendarDate(data.to)
         || typeof data.totalContributions !== 'number' || !Number.isSafeInteger(data.totalContributions) || data.totalContributions < 0
         || typeof data.rangeDays !== 'number' || !Number.isInteger(data.rangeDays) || data.rangeDays < 1 || data.rangeDays > 367
         || (Date.parse(data.to) - Date.parse(data.from)) / 86_400_000 + 1 !== data.rangeDays
         || typeof data.privateContributionsIncluded !== 'boolean') {
         throw new BattleError('La respuesta no contiene datos válidos. Vuelve a intentarlo.');
     }
+    const weeks = readCalendar(data.weeks, { from: data.from, to: data.to, rangeDays: data.rangeDays, totalContributions: data.totalContributions });
+    if (!weeks) throw new BattleError('El calendario no contiene datos válidos. Vuelve a intentarlo.');
     return {
         username, from: data.from, to: data.to, rangeDays: data.rangeDays,
         totalContributions: data.totalContributions, privateContributionsIncluded: data.privateContributionsIncluded,
+        weeks,
     };
 }
 

@@ -3,7 +3,7 @@
 
 **Taller VS Code GitHub Copilot** — Construye una Arena de Batalla de Contribuciones GitHub
 
-Proyecto para construir con Astro un sitio de estilo arcade que compare las contribuciones GitHub de dos usuarios. La API y la pantalla de comparación ya funcionan: muestran totales, período y ganador o empate. Consulta el [funcionamiento de la comparación](docs/battle.md) y el [contrato de la API](docs/api-contributions.md). Los calendarios de contribuciones quedan para la fase 4.
+Aplicación Astro de estilo arcade para comparar las contribuciones GitHub de dos usuarios. Incluye API, totales, ganador o empate y calendarios diarios interactivos, con diseño adaptable, navegación por teclado y movimiento reducido. Consulta el [funcionamiento de la comparación](docs/battle.md) y el [contrato de la API](docs/api-contributions.md).
 
 ![Mona Mayhem Screenshot](https://github.com/user-attachments/assets/5eca79e2-cb9f-4e93-aa0d-23666ebde3b7)
 
